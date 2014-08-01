@@ -14,13 +14,17 @@ def prime?(number, primes)
   return factors.none? { |i| number % i == 0 }
 end
 
-primes = [2]
-n = 3
+def find_n_prime(n)
+  primes = [2]
+  i = 3
 
-while primes.count < 10001
-  primes << n if prime?(n, primes)
+  while primes.count < n
+    primes << i if prime?(i, primes)
 
-  n = n + 2
+    i = i + 2
+  end
+
+  return primes.last
 end
 
-puts "ANSWER: #{primes.last}"
+puts "ANSWER: #{find_n_prime(10001)}"
