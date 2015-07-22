@@ -23,3 +23,6 @@ while f < 4000000
 end
 
 puts "ANSWER: #{total}"
+t = Benchmark.ms do
+(1..32).inject([0, 1]) { |a, i| (a << a[-1] + a[-2] if a[-1] + a[-2] <= 4000000) || a }.reject(&:odd?).sum
+end

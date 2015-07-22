@@ -51,16 +51,21 @@ DATA = [%w[08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08],
         %w[01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48]]
 
 largest = 0
-[-1, 0, 1].each do |x|
-  [-1, 0, 1].each do |y|
-    (0..20).each do |c|
-      (0..20).each do |r|
-        current = []
-        current << DATA[c, r]
-        3.times do |x|
-          
+(0..20).each do |c|
+  (0..20).each do |r|
+    current = []
+    [-1, 0, 1].each do |x|
+      [-1, 0, 1].each do |y|
+        (0..3).each do |i|
+          current << DATA[c + x * i, r + y * i]
         end
       end
     end
+    next if current.compact.count < 4
+    puts current.inspect
+    total = current.map(&:to_i).inject(:*)
+    longest = total if total > longest
   end
 end
+
+puts "LONGEST: #{longest}"
