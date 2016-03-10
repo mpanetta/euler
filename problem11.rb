@@ -29,7 +29,11 @@ What is the greatest product of four adjacent numbers in the same direction (up,
 
 =end
 
-DATA = [%w[08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08],
+require 'pry'
+
+
+STRING_DATA =
+       [%w[08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08],
         %w[49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48 04 56 62 00],
         %w[81 49 31 73 55 79 14 29 93 71 40 67 53 88 30 03 49 13 36 65],
         %w[52 70 95 23 04 60 11 42 69 24 68 56 01 32 56 71 37 02 36 91],
@@ -50,22 +54,37 @@ DATA = [%w[08 02 22 97 38 15 00 40 00 75 04 05 07 78 52 12 50 77 91 08],
         %w[20 73 35 29 78 31 90 01 74 31 49 71 48 86 81 16 23 57 05 54],
         %w[01 70 54 71 83 51 54 69 16 92 33 48 61 43 52 01 89 19 67 48]]
 
+
+
+data = STRING_DATA.collect { |r| r.collect { |e| e.to_i } }
+
+def bounded?(x, y, set)
+    x >= 0 && x < set.first.count && y >= 0 && y < set.count
+end
+
 largest = 0
-(0..20).each do |c|
-  (0..20).each do |r|
-    current = []
+(0..data.first.count).each do |c|
+  (0..data.count).each do |r|
     [-1, 0, 1].each do |x|
       [-1, 0, 1].each do |y|
-        (0..3).each do |i|
-          current << DATA[c + x * i, r + y * i]
-        end
+        next if x == 0 && y == 0
+        current = (0..3).collect do |i|
+            a = (c + x * i)
+            b = (r + y * i)
+
+            data[b][a] if bounded?(a, b, data)
+        end.compact
+
+        puts "CURRENT: #{current.inspect} (x: #{x}, y: #{y}, r: #{r}, c:#{c})"
+        next if current.count < 4
+
+        total = current.map(&:to_i).inject(:*)
+        largest = total if total > largest
       end
     end
-    next if current.compact.count < 4
-    puts current.inspect
-    total = current.map(&:to_i).inject(:*)
-    longest = total if total > longest
   end
 end
 
-puts "LONGEST: #{longest}"
+
+
+puts "LARGEST: #{largest}"
